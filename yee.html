@@ -1,124 +1,75 @@
+
 <!DOCTYPE html>
+<html lang="ko">
+<head>
     <meta charset="UTF-8">
     <title>송진욱 이력서</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: solid 1px black;
+            padding: 10px;
+            text-align: left;
+        }
+        .profile-container {
+            display: flex;
+            align-items: center;
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            margin-right: 20px;
+        }
+    </style>
 </head>
-
-<style>
-table{
-width: 100%;
-
-<head>
-  <meta charset="UTF-8">
-  <title>송진욱 이력서</title>
-
-<style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid black;
-      padding: 10px;
-    }
-  </style>
-
-</head>
-
 <body>
 
 <h1>이력서</h1>
 
 <h3>1. 기본정보</h3>
 <table>
-  <tr>
-    
-    <td rowspan="6" style="width: 160px; text-align: center;">
-      <img src=https://github.com/phunu12345/html-project/blob/main/jinuk.jpg width="150" height="150" alt="프로필 사진">
-    </td>
-    <th>성 명</th>
-    <td>송진욱</td>
-  </tr>
-  <tr>
-    <th>성별</th>
-    <td>남</td>
-  </tr>
-  <tr>
-    <th>나이</th>
-    <td>24</td>
-  </tr>
-  <tr>
-    <th>주민등록번호</th>
-    <td>020212-3000000</td>
-  </tr>
-  <tr>
-    <th>전화번호</th>
-    <td>010 2751 5156</td>
-  </tr>
-  <tr>
-    <th>이메일</th>
-    <td>jinuk7001@naver.com</td>
-  </tr>
+    <tr>
+        <td class="profile-container">
+            <img src="sajin.jpg" class="profile-img" alt="프로필 사진">
+            <table>
+                <tr><th>성 명</th><td>송진욱</td></tr>
+                <tr><th>성별</th><td>남</td></tr>
+                <tr><th>나이</th><td>24</td></tr>
+                <tr><th>주민등록번호</th><td>020212-3000000</td></tr>
+                <tr><th>전화번호</th><td>010-2751-5156</td></tr>
+                <tr><th>이메일</th><td>jinuk7001@naver.com</td></tr>
+            </table>
+        </td>
+    </tr>
 </table>
 
 <h3>2. 병역사항</h3>
 <table>
-  <tr>
-    <th>전역유/무</th>
-    <th>입대일</th>
-    <th>전역일</th>
-  </tr>
-  <tr>
-    <td>해병대병장만기</td>
-    <td>22.04</td>
-    <td>23.11</td>
-  </tr>
+    <tr><th>전역유/무</th><th>입대일</th><th>전역일</th></tr>
+    <tr><td>해병대 레이더병 병장 만기</td><td>22.04</td><td>23.11</td></tr>
 </table>
 
 <h3>3. 학력사항</h3>
 <table>
-  <tr>
-    <th>년/월/일</th>
-    <th>학교명</th>
-    <th>전공과목 및 학과</th>
-  </tr>
-  <tr>
-    <td>2025년 3월 1일</td>
-    <td>인천폴리텍대학교</td>
-    <td>AI소프트웨어</td>
-  </tr>
+    <tr><th>년/월/일</th><th>학교명</th><th>전공과목 및 학과</th></tr>
+    <tr><td>2025년 3월 1일</td><td>인천폴리텍대학교</td><td>AI소프트웨어</td></tr>
 </table>
 
 <h3>4. 경력사항</h3>
 <table>
-  <tr>
-    <th>회사명</th>
-    <th>직위 및 업무내용</th>
-    <th>업무기간</th>
-  </tr>
-  <tr>
-    <td>유튜브회사</td>
-    <td>촬영 및 편집</td>
-    <td>2023.12 ~ 2024~</td>
-  </tr>
+    <tr><th>회사명</th><th>직위 및 업무내용</th><th>업무기간</th></tr>
+    <tr><th>유튜브회사(유사투자자문업)</th><th>촬영및 컷편집(하루5개 영상 업로드 누적DB 1300개)</th><th>2023.12~진행중</th></tr>
+	<tr><th>MT4, MT5</th><th>mql 언어를 이용한 자동매매프로그램개발</th><th>2024.12~진행중</th></tr>
 </table>
 
 <h3>5. 면허 및 자격증</h3>
 <table>
-  <tr>
-    <th>취득일</th>
-    <th>자격증</th>
-    <th>발령청</th>
-  </tr>
-  <tr>
-    <td>2023.03.08</td>
-    <td>1종보통자동차운전면허증</td>
-    <td>전라남도경찰청</td>
-  </tr>
-  <tr>
-    <td>2024.08.05</td>
-    <td>화물운송종사자격증</td>
-    <td>한국교통안전공단</td>
-  </tr>
+    <tr><th>취득일</th><th>자격증</th><th>발령청</th></tr>
+    <tr><td>2023.03.08</td><td>1종 보통 자동차운전면허증</td><td>전라남도 경찰청</td></tr>
+    <tr><td>2024.08.05</td><td>화물운송 종사자격증</td><td>한국교통안전공단</td></tr>
 </table>
 
 </body>
