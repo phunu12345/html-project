@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>금융 뉴스</title>
+  <style>
+    /* 전체 레이아웃 */
+    body {
+      margin: 0;
+      font-family: 'Apple SD Gothic Neo', sans-serif;
+      background: #fafafa;
+      color: #202124;
+    }
+    .container {
+      width: 1200px;
+      margin: 40px auto;
+    }
+
+    /* 헤더 */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #34a853;
+    }
+    .nav {
+      display: flex;
+      gap: 24px;
+      font-size: 16px;
+    }
+    .nav a {
+      text-decoration: none;
+      color: #5f6368;
+      padding: 8px 0;
+    }
+    .nav a.active {
+      color: #34a853;
+      border-bottom: 2px solid #34a853;
+    }
+    .login-btn {
+      background: #34a853;
+      color: #fff;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* 타이틀 & 탭 */
+    h2 {
+      margin: 40px 0 16px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .tabs {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+      font-size: 16px;
+    }
+    .tabs div {
+      cursor: pointer;
+      padding-bottom: 8px;
+      color: #5f6368;
+    }
+    .tabs .active {
+      color: #34a853;
+      border-bottom: 2px solid #34a853;
+    }
+
+    /* 카드 리스트 */
+    .cards {
+      display: flex;
+      gap: 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 368px;
+    }
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 16px;
+    }
+
+    /* 카테고리 + 시간 */
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .category {
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+    .category.fx { background: #e8f0fe; color: #1a73e8; }
+    .category.crypto { background: #fff4e5; color: #f9ab00; }
+    .category.stock { background: #e6f4ea; color: #34a853; }
+    .time {
+      color: #757575;
+    }
+
+    /* 제목, 설명 */
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0 0 8px;
+      color: #202124;
+    }
+    .card-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #5f6368;
+      margin: 0 0 16px;
+    }
+
+    /* 출처 + 더보기 */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: #5f6368;
+    }
+    .source a,
+    .read-more {
+      text-decoration: none;
+      color: #1a73e8;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 헤더 -->
+    <header class="header">
+      <div class="logo">FIMIX</div>
+      <nav class="nav">
+        <a href="#">대시보드</a>
+        <a href="#" class="active">뉴스</a>
+        <a href="#">변동성 정보</a>
+        <a href="#">경제 캘린더</a>
+        <a href="#">카피 트레이딩</a>
+      </nav>
+      <button class="login-btn">로그인</button>
+    </header>
+
+    <!-- 섹션 타이틀 & 탭 -->
+    <h2>금융 뉴스</h2>
+    <div class="tabs">
+      <div class="active">전체</div>
+      <div>외환</div>
+      <div>주식</div>
+      <div>암호화폐</div>
+    </div>
+
+    <!-- 카드 리스트 -->
+    <div class="cards">
+      <!-- 카드 1 -->
+      <div class="card">
+        <img src="fx-chart.jpg" alt="외환 차트">
+        <div class="card-content">
+          <div class="meta">
+            <span class="category fx">외환</span>
+            <span class="time">11분 전</span>
+          </div>
+          <h3 class="card-title">
+            연준, 기준금리 동결… 시장은 내년 금리 인하 기대
+          </h3>
+          <p class="card-desc">
+            연방준비제도이사회가 기준금리를 5.25~5.5% 수준으로 유지하기로 결정했다. 제품 파월 의장은 인플레이션 둔화…
+          </p>
+          <div class="footer">
+            <div class="source">
+              로이터<a href="#">더보기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 카드 2 -->
+      <div class="card">
+        <img src="crypto-block.jpg" alt="암호화폐 이미지">
+        <div class="card-content">
+          <div class="meta">
+            <span class="category crypto">암호화폐</span>
+            <span class="time">23분 전</span>
+          </div>
+          <h3 class="card-title">
+            비트코인 ETF 승인 기대감에 44,000달러 돌파
+          </h3>
+          <p class="card-desc">
+            비트코인이 44,000달러를 돌파하며 강세를 이어가고 있다. 기관 투자자들의 유입과 ETF 승인에 대한 기대감이 상승 동력…
+          </p>
+          <div class="footer">
+            <div class="source">
+              코인데스크<a href="#">더보기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 카드 3 -->
+      <div class="card">
+        <img src="apple-kitchen.jpg" alt="애플 실적 이미지">
+        <div class="card-content">
+          <div class="meta">
+            <span class="category stock">주식</span>
+            <span class="time">40분 전</span>
+          </div>
+          <h3 class="card-title">
+            애플 3분기 실적 발표, 아이폰 판매 부진에도 서비스 매출 호조
+          </h3>
+          <p class="card-desc">
+            애플이 발표한 3분기 실적에서 아이폰 판매는 예상을 하회했지만, 서비스 부문의 강한 성장세로 전체적으로 양호한 실적…
+          </p>
+          <div class="footer">
+            <div class="source">
+              블룸버그<a href="#">더보기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
