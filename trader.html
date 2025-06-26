@@ -2,99 +2,412 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카피 트레이더 리스트</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>카피 트레이딩</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
-    h1 { margin: 40px 0; }
-    .trader-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
-    .trader-card {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 20px;
-      width: 220px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
+    /* --- Reset & 기본 설정 --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Apple SD Gothic Neo', 'Sans-serif'; background: #F8F9FA; color: #333; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { cursor: pointer; border: none; }
+
+    /* --- 네비게이션 --- */
+    .navbar {
+      background: #FFFFFF;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .trader-card:hover {
-      transform: scale(1.05);
-    }
-    .trader-card img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 10px;
-    }
-    .trader-card h2 {
-      margin: 10px 0 5px 0;
-      font-size: 20px;
-    }
-    .trader-card p {
-      margin: 5px 0;
-      font-size: 14px;
-    }
-    .profit {
+    .navbar .logo {
+      font-size: 24px;
       font-weight: bold;
     }
-    .positive { color: #27ae60; }
-    button {
-      margin-top: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px;
-      width: 100%;
-      border-radius: 4px;
-      cursor: pointer;
+    .navbar .logo span { color: #27AE60; }
+    .navbar nav {
+      margin-left: 60px;
+      display: flex;
+      gap: 40px;
+      font-size: 16px;
+      color: #4F4F4F;
     }
-    button:hover {
-      background-color: #45a049;
+    .navbar nav .active { color: #27AE60; }
+    .navbar .icons {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .navbar .icons svg { width: 20px; height: 20px; fill: #828282; }
+    .navbar .btn-login {
+      background: #27AE60;
+      color: #FFF;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* --- 컨텐츠 래퍼 --- */
+    .wrapper {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .page-sub {
+      font-size: 14px;
+      color: #828282;
+      margin-bottom: 24px;
+    }
+
+    /* --- 필터 바 --- */
+    .filter-bar {
+      background: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .filter-bar .search {
+      position: relative;
+      flex: 1;
+    }
+    .filter-bar .search svg {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      transform: translateY(-50%);
+      fill: #828282;
+      width: 18px; height: 18px;
+    }
+    .filter-bar .search input {
+      width: 100%;
+      padding: 10px 16px 10px 44px;
+      border: 1px solid #E0E0E0;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #333;
+    }
+    .filter-bar select {
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 1px solid #E0E0E0;
+      border-radius: 6px;
+      background: #FFF;
+      color: #333;
+    }
+
+    /* --- 카드 그리드 --- */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 24px;
+    }
+    .card {
+      background: #FFF;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #F2F2F2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: #828282;
+      border: 2px solid #C7C7C7; /* 기본 테두리 컬러 */
+    }
+    /* 카드별 아바타 컬러 커스텀 */
+    .card.vt .avatar { border-color: #6FCF97; color: #6FCF97; }
+    .card.ichi .avatar { border-color: #4D7FFF; color: #4D7FFF; }
+    .card.elias .avatar { border-color: #B084FF; color: #B084FF; }
+    .card.trust .avatar { border-color: #6ECF91; color: #6ECF91; }
+
+    .card-header .info {
+      flex: 1;
+    }
+    .card-header .info .name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+    .card-header .info .days {
+      font-size: 12px;
+      color: #828282;
+      margin-top: 2px;
+    }
+    .card-header .status-dot {
+      width: 10px;
+      height: 10px;
+      background: #27AE60;
+      border-radius: 50%;
+    }
+
+    /* --- 주요 수치 --- */
+    .metrics {
+      margin-bottom: 20px;
+    }
+    .metrics .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .metrics .row .label {
+      font-size: 14px;
+      color: #4F4F4F;
+    }
+    .metrics .row .value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #27AE60;
+    }
+    .metrics ul {
+      margin-top: 12px;
+      list-style: none;
+    }
+    .metrics ul li {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #4F4F4F;
+      margin-bottom: 6px;
+    }
+    .metrics ul li .val {
+      font-weight: 600;
+    }
+    .metrics ul li.loss .val { color: #EB5757; }
+    .metrics ul li.profit .val { color: #27AE60; }
+
+    /* --- 리스크 레벨 --- */
+    .risk {
+      margin-bottom: 20px;
+    }
+    .risk .label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #828282;
+      margin-bottom: 6px;
+    }
+    .risk .bar {
+      width: 100%;
+      height: 6px;
+      background: #E0E0E0;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+    .risk .bar .fill {
+      height: 100%;
+      background: #F2C94C;
+      width: 50%; /* 카드별로 달리 지정합니다. */
+    }
+    .card.ichi .risk .bar .fill { background: #EB5757; width: 75%; }
+    .card.elias .risk .bar .fill { background: #6FCF97; width: 35%; }
+    .card.trust .risk .bar .fill { background: #6FCF97; width: 30%; }
+
+    /* --- 선택 버튼 --- */
+    .btn-select {
+      background: #27AE60;
+      color: #FFF;
+      text-align: center;
+      padding: 12px 0;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <h1>카피 트레이더를 선택하세요</h1>
-  <div class="trader-list">
-    <div class="trader-card">
-      <img src="https://via.placeholder.com/100" alt="VT_Trading">
-      <h2>VT_Trading</h2>
-      <p>거래일: 120일</p>
-      <p class="profit positive">수익률: +120,000.00%</p>
-      <button onclick="location.href='payment.html?trader=VT_Trading'">선택</button>
+
+  <!-- 내비게이션 -->
+  <header class="navbar">
+    <div class="logo">FI<span>MIX</span></div>
+    <nav>
+      <a href="#">대시보드</a>
+      <a href="#">뉴스</a>
+      <a href="#">변동성 정보</a>
+      <a href="#">경제 캘린더</a>
+      <a href="#" class="active">카피 트레이딩</a>
+    </nav>
+    <div class="icons">
+      <!-- 검색 아이콘 -->
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 001.48-5.34C15.37 5.59 12.28 2.5 8.5 2.5S1.63 5.59 1.63 9.39s3.09 6.89 6.87 6.89c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-7 0C6.01 14 3.63 11.62 3.63 8.89S6.01 3.78 8.5 3.78s4.87 2.38 4.87 5.11-2.38 5.11-4.87 5.11z"/></svg>
+      <!-- 알림 아이콘 -->
+      <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 00-3 0v.68C7.64 5.36 6 7.92 6 11v5l-1.99 2L4 19h16l-.01-1L18 16z"/></svg>
+      <button class="btn-login">로그인</button>
+    </div>
+  </header>
+
+  <!-- 본문 -->
+  <div class="wrapper">
+    <div class="page-title">카피 트레이딩</div>
+    <div class="page-sub">성공한 트레이더의 전략을 따라 투자하세요</div>
+
+    <!-- 필터 바 -->
+    <div class="filter-bar">
+      <div class="search">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 001.48-5.34C15.37 5.59 12.28 2.5 8.5 2.5S1.63 5.59 1.63 9.39s3.09 6.89 6.87 6.89c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-7 0C6.01 14 3.63 11.62 3.63 8.89S6.01 3.78 8.5 3.78s4.87 2.38 4.87 5.11-2.38 5.11-4.87 5.11z"/></svg>
+        <input type="text" placeholder="트레이더 이름으로 검색...">
+      </div>
+      <select>
+        <option>수익률 높은 순</option>
+        <option>수익률 낮은 순</option>
+      </select>
+      <select>
+        <option>전체 기간</option>
+        <option>1개월</option>
+        <option>6개월</option>
+      </select>
     </div>
 
-    <div class="trader-card">
-      <img src="https://via.placeholder.com/100" alt="Ichi5308">
-      <h2>Ichi5308</h2>
-      <p>거래일: 250일</p>
-      <p class="profit positive">수익률: +95,000.00%</p>
-      <button onclick="location.href='payment.html?trader=Ichi5308'">선택</button>
-    </div>
+    <!-- 카드 그리드 -->
+    <div class="card-grid">
+      <!-- VT Trading -->
+      <div class="card vt">
+        <div>
+          <div class="card-header">
+            <div class="avatar">VT</div>
+            <div class="info">
+              <div class="name">VT_Trading</div>
+              <div class="days">거래일: 120일</div>
+            </div>
+            <div class="status-dot"></div>
+          </div>
+          <div class="metrics">
+            <div class="row">
+              <div class="label">총 수익률</div>
+              <div class="value">+120000.00%</div>
+            </div>
+            <ul>
+              <li><span>월 평균 수익률</span><span class="val profit">+15.20%</span></li>
+              <li class="loss"><span>최대 손실</span><span class="val loss">-8.50%</span></li>
+              <li><span>팔로워</span><span class="val">1,247명</span></li>
+            </ul>
+          </div>
+          <div class="risk">
+            <div class="label-row"><span>리스크 레벨</span><span>중간</span></div>
+            <div class="bar"><div class="fill"></div></div>
+          </div>
+        </div>
+        <div><button class="btn-select">선택</button></div>
+      </div>
 
-    <div class="trader-card">
-      <img src="https://via.placeholder.com/100" alt="Elias_Trading02">
-      <h2>Elias_Trading02</h2>
-      <p>거래일: 180일</p>
-      <p class="profit positive">수익률: +80,500.00%</p>
-      <button onclick="location.href='payment.html?trader=Elias_Trading02'">선택</button>
-    </div>
+      <!-- Ichi5308 -->
+      <div class="card ichi">
+        <div>
+          <div class="card-header">
+            <div class="avatar">IC</div>
+            <div class="info">
+              <div class="name">Ichi5308</div>
+              <div class="days">거래일: 250일</div>
+            </div>
+            <div class="status-dot"></div>
+          </div>
+          <div class="metrics">
+            <div class="row">
+              <div class="label">총 수익률</div>
+              <div class="value">+85000.00%</div>
+            </div>
+            <ul>
+              <li><span>월 평균 수익률</span><span class="val profit">+12.80%</span></li>
+              <li class="loss"><span>최대 손실</span><span class="val loss">-12.30%</span></li>
+              <li><span>팔로워</span><span class="val">892명</span></li>
+            </ul>
+          </div>
+          <div class="risk">
+            <div class="label-row"><span>리스크 레벨</span><span>높음</span></div>
+            <div class="bar"><div class="fill"></div></div>
+          </div>
+        </div>
+        <div><button class="btn-select">선택</button></div>
+      </div>
 
-    <div class="trader-card">
-      <img src="https://via.placeholder.com/100" alt="TrustTrade">
-      <h2>TrustTrade</h2>
-      <p>거래일: 300일</p>
-      <p class="profit positive">수익률: +70,200.00%</p>
-      <button onclick="location.href='payment.html?trader=TrustTrade'">선택</button>
-    </div>
+      <!-- Elias_Trading02 -->
+      <div class="card elias">
+        <div>
+          <div class="card-header">
+            <div class="avatar">ET</div>
+            <div class="info">
+              <div class="name">Elias_Trading02</div>
+              <div class="days">거래일: 180일</div>
+            </div>
+            <div class="status-dot"></div>
+          </div>
+          <div class="metrics">
+            <div class="row">
+              <div class="label">총 수익률</div>
+              <div class="value">+80500.00%</div>
+            </div>
+            <ul>
+              <li><span>월 평균 수익률</span><span class="val profit">+18.90%</span></li>
+              <li class="loss"><span>최대 손실</span><span class="val loss">-6.20%</span></li>
+              <li><span>팔로워</span><span class="val">2,134명</span></li>
+            </ul>
+          </div>
+          <div class="risk">
+            <div class="label-row"><span>리스크 레벨</span><span>낮음</span></div>
+            <div class="bar"><div class="fill"></div></div>
+          </div>
+        </div>
+        <div><button class="btn-select">선택</button></div>
+      </div>
 
-    <div class="trader-card">
-      <img src="https://via.placeholder.com/100" alt="alireza135">
-      <h2>alireza135</h2>
-      <p>거래일: 210일</p>
-      <p class="profit positive">수익률: +65,750.00%</p>
-      <button onclick="location.href='payment.html?trader=alireza135'">선택</button>
+      <!-- TrustTrade -->
+      <div class="card trust">
+        <div>
+          <div class="card-header">
+            <div class="avatar">TT</div>
+            <div class="info">
+              <div class="name">TrustTrade</div>
+              <div class="days">거래일: 300일</div>
+            </div>
+            <div class="status-dot"></div>
+          </div>
+          <div class="metrics">
+            <div class="row">
+              <div class="label">총 수익률</div>
+              <div class="value">+70200.00%</div>
+            </div>
+            <ul>
+              <li><span>월 평균 수익률</span><span class="val profit">+9.70%</span></li>
+              <li class="loss"><span>최대 손실</span><span class="val loss">-4.10%</span></li>
+              <li><span>팔로워</span><span class="val">3,567명</span></li>
+            </ul>
+          </div>
+          <div class="risk">
+            <div class="label-row"><span>리스크 레벨</span><span>낮음</span></div>
+            <div class="bar"><div class="fill"></div></div>
+          </div>
+        </div>
+        <div><button class="btn-select">선택</button></div>
+      </div>
     </div>
   </div>
+
 </body>
 </html>
