@@ -2,796 +2,133 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>경제 캘린더 - 주요일정</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>경제 캘린더 대시보드</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #f5f5f5;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; color: #333; }
+    .navbar { background-color: #fff; display: flex; align-items: center; padding: 0 20px; height: 60px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    .navbar .logo { font-size: 20px; font-weight: bold; margin-right: 40px; }
+    .navbar .menu { list-style: none; display: flex; flex: 1; }
+    .navbar .menu li { margin-right: 30px; font-size: 14px; cursor: pointer; }
+    .navbar .menu li.active { color: #28a745; font-weight: 500; }
+    .navbar .actions { display: flex; align-items: center; }
+    .navbar .actions .icon { width: 20px; height: 20px; margin-right: 20px; cursor: pointer; }
+    .navbar .actions .login-btn { background-color: #28a745; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .page-title { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+    .page-subtitle { font-size: 14px; color: #666; margin-bottom: 24px; }
+
+    .filters { background-color: #fff; padding: 16px; border-radius: 8px; display: flex; gap: 16px; margin-bottom: 24px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .filters select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; background-color: #fff; }
+
+    .calendar-table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .calendar-table th, .calendar-table td { padding: 12px 16px; text-align: left; font-size: 14px; }
+    .calendar-table th { border-bottom: 2px solid #eee; color: #555; }
+    .calendar-table tr:not(:first-child) { border-bottom: 1px solid #f1f1f1; }
+
+    /* Currency labels */
+    .label { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+    .label-usd { background-color: #e7f3fe; color: #0366d6; }
+    .label-jpy { background-color: #fff4e5; color: #b36b00; }
+    .label-krw { background-color: #fdecea; color: #d93025; }
+
+    /* Importance pills */
+    .importance { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; text-align: center; }
+    .imp-high { background-color: #ffecec; color: #d93025; }
+    .imp-medium { background-color: #fff8e1; color: #f29900; }
+    .imp-low { background-color: #e6ffed; color: #28a745; }
   </style>
 </head>
 <body>
-  <h1>경제 캘린더</h1>
-  <!-- 여기에 복사한 테이블 전체 붙여넣기 -->
-  <!-- 당신이 제공한 테이블이 여기에 들어갑니다. -->
-  <!-- 예: <table> ... </table> -->
-  <h1 class="float_lang_base_1 relativeAttr" dir="ltr">경제캘린더	</h1><table id="economicCalendarData" class="genTbl closedTbl ecoCalTbl persistArea js-economic-table">
+  <nav class="navbar">
+    <div class="logo">FIMIX</div>
+    <ul class="menu">
+      <li>대시보드</li>
+      <li>뉴스</li>
+      <li>변동성 정보</li>
+      <li class="active">경제 캘린더</li>
+      <li>카피 트레이딩</li>
+    </ul>
+    <div class="actions">
+      <img src="search-icon.svg" alt="검색" class="icon">
+      <img src="bell-icon.svg" alt="알림" class="icon">
+      <button class="login-btn">로그인</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-title">경제 캘린더</div>
+    <div class="page-subtitle">주요 경제 지표 발표 일정과 실시간 결과</div>
+
+    <div class="filters">
+      <select><option>오늘</option></select>
+      <select><option>전체</option></select>
+      <select><option>전체</option></select>
+      <select><option>전체</option></select>
+    </div>
+
+    <table class="calendar-table">
       <thead>
-          <tr>
-              <th class="first time left">시간</th>
-              <th class="flagCur left">외화</th>
-              <th class="textNum imp left">중요성</th>
-              <th class="event left">이벤트</th>
-              <th class="act">실제</th>
-              <th class="time">예측</th>
-              <th class="prev">이전</th>
-              <th class="last"></th>
-          </tr>
+        <tr>
+          <th>시간</th>
+          <th>통화</th>
+          <th>이벤트</th>
+          <th>중요도</th>
+          <th>실제</th>
+          <th>예측</th>
+          <th>이전</th>
+        </tr>
       </thead>
-      <thead class="floatingHeader" style="display: none;">
-      <tr>
-          <th class="first time left">시간</th>
-          <th class="flagCur left">외화</th>
-          <th class="textNum imp left">중요성</th>
-          <th class="event left">이벤트</th>
-          <th class="act">실제</th>
-          <th class="time">예측</th>
-          <th class="prev">이전</th>
-		  <th class="last"></th>
-      </tr>
-      </thead>
-      <tbody pagestartat="">				<tr>
-	      			<td colspan="9" class="theDay" id="theDay1746748800">2025년 5월 9일 금요일</td>
-	    		</tr>
-					    		<tr id="eventRowId_522908" class="js-event-item" event_attr_id="567" data-event-datetime="2025/05/09 00:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는  14시간 34분  전에 발표되었습니다.">00:30</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 4주일물 국채 입찰를 클릭하세요"><a href="/economic-calendar/4-week-bill-auction-567" target="_blank">
-				      4주일물 국채 입찰 </a>
-				      </td>
-				      <td class="bold act blackFont event-522908-actual" title="" id="eventActual_522908">4.225%</td>
-				      <td class="fore  event-522908-forecast " id="eventForecast_522908">&nbsp;</td>
-				      <td class="prev blackFont  event-522908-previous" id="eventPrevious_522908"><span title="">4.240%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="4주일물 국채 입찰" data-event-id="567" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522764" class="js-event-item" event_attr_id="1801" data-event-datetime="2025/05/09 00:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는  14시간 34분  전에 발표되었습니다.">00:30</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 8주일물 미 국채 입찰를 클릭하세요"><a href="/economic-calendar/8-week-bill-auction-1801" target="_blank">
-				      8주일물 미 국채 입찰 </a>
-				      </td>
-				      <td class="bold act blackFont event-522764-actual" title="" id="eventActual_522764">4.225%</td>
-				      <td class="fore  event-522764-forecast " id="eventForecast_522764">&nbsp;</td>
-				      <td class="prev blackFont  event-522764-previous" id="eventPrevious_522764"><span title="">4.220%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="8주일물 미 국채 입찰" data-event-id="1801" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522950" class="js-event-item" event_attr_id="2260" data-event-datetime="2025/05/09 00:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는  14시간 34분  전에 발표되었습니다.">00:30</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 애틀랜타 연방준비은행의 GDPnow를 클릭하세요"><a href="/economic-calendar/atlanta-fed-gdpnow-2260" target="_blank">
-				      애틀랜타 연방준비은행의 GDPnow  (2분기)</a>
-				      &nbsp;<span class="smallGrayP" title="예비 출시" data-img_key="perliminary"></span></td>
-				      <td class="bold act greenFont event-522950-actual" title="예상치보다 높습니다" id="eventActual_522950">2.3%</td>
-				      <td class="fore  event-522950-forecast " id="eventForecast_522950">2.2%</td>
-				      <td class="prev blackFont  event-522950-previous" id="eventPrevious_522950"><span title="">2.2%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="애틀랜타 연방준비은행의 GDPnow" data-event-id="2260" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522909" class="js-event-item" event_attr_id="572" data-event-datetime="2025/05/09 02:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  13시간 04분  전에 발표되었습니다.">02:00</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 30년물 국채 입찰를 클릭하세요"><a href="/economic-calendar/30-year-bond-auction-572" target="_blank">
-				      30년물 국채 입찰 </a>
-				      </td>
-				      <td class="bold act blackFont event-522909-actual" title="" id="eventActual_522909">4.819%</td>
-				      <td class="fore  event-522909-forecast " id="eventForecast_522909">&nbsp;</td>
-				      <td class="prev blackFont  event-522909-previous" id="eventPrevious_522909"><span title="">4.813%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="30년물 국채 입찰" data-event-id="572" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523090" class="js-event-item" event_attr_id="2145" data-event-datetime="2025/05/09 05:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는  9시간 34분  전에 발표되었습니다.">05:30</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 Fed's Balance Sheet를 클릭하세요"><a href="/economic-calendar/fed's-balance-sheet-2145" target="_blank">
-				      Fed's Balance Sheet </a>
-				      </td>
-				      <td class="bold act blackFont event-523090-actual" title="" id="eventActual_523090">6,711B</td>
-				      <td class="fore  event-523090-forecast " id="eventForecast_523090">&nbsp;</td>
-				      <td class="prev blackFont  event-523090-previous" id="eventPrevious_523090"><span title="">6,709B</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="Fed's Balance Sheet" data-event-id="2145" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523091" class="js-event-item" event_attr_id="2120" data-event-datetime="2025/05/09 05:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는  9시간 34분  전에 발표되었습니다.">05:30</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 연방준비은행 지급준비금 잔액를 클릭하세요"><a href="/economic-calendar/reserve-balances-with-federal-reserve-banks-2120" target="_blank">
-				      연방준비은행 지급준비금 잔액 </a>
-				      </td>
-				      <td class="bold act blackFont event-523091-actual" title="" id="eventActual_523091">3.201T</td>
-				      <td class="fore  event-523091-forecast " id="eventForecast_523091">&nbsp;</td>
-				      <td class="prev blackFont  event-523091-previous" id="eventPrevious_523091"><span title="">3.000T</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="연방준비은행 지급준비금 잔액" data-event-id="2120" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522092" class="js-event-item" event_attr_id="789" data-event-datetime="2025/05/09 08:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  7시간 04분  전에 발표되었습니다.">08:00</td>
-				      <td class="left flagCur noWrap"><span title="한국" class="ceFlags South_Korea" data-img_key="South_Korea">&nbsp;</span> KRW</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 한국 경상수지를 클릭하세요"><a href="/economic-calendar/south-korean-current-account-789" target="_blank">
-				      한국 경상수지  (3월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522092-actual" title="" id="eventActual_522092">9.14B</td>
-				      <td class="fore  event-522092-forecast " id="eventForecast_522092">&nbsp;</td>
-				      <td class="prev blackFont  event-522092-previous" id="eventPrevious_522092"><span title="">7.18B</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="한국 경상수지" data-event-id="789" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522091" class="js-event-item" event_attr_id="494" data-event-datetime="2025/05/09 08:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  7시간 04분  전에 발표되었습니다.">08:00</td>
-				      <td class="left flagCur noWrap"><span title="콜롬비아" class="ceFlags Colombia" data-img_key="Colombia">&nbsp;</span> COP</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 콜롬비아 소비자물가지수를 클릭하세요"><a href="/economic-calendar/colombian-cpi-494" target="_blank">
-				      콜롬비아 소비자물가지수 (YoY)  (4월)</a>
-				      </td>
-				      <td class="bold act greenFont event-522091-actual" title="예상치보다 높습니다" id="eventActual_522091">5.16%</td>
-				      <td class="fore  event-522091-forecast " id="eventForecast_522091">5.00%</td>
-				      <td class="prev blackFont  event-522091-previous" id="eventPrevious_522091"><span title="">5.09%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="콜롬비아 소비자물가지수" data-event-id="494" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522089" class="js-event-item" event_attr_id="1197" data-event-datetime="2025/05/09 08:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  7시간 04분  전에 발표되었습니다.">08:00</td>
-				      <td class="left flagCur noWrap"><span title="콜롬비아" class="ceFlags Colombia" data-img_key="Colombia">&nbsp;</span> COP</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 소비자물가지수를 클릭하세요"><a href="/economic-calendar/colombian-cpi-1197" target="_blank">
-				      소비자물가지수 (MoM)  (4월)</a>
-				      </td>
-				      <td class="bold act greenFont event-522089-actual" title="예상치보다 높습니다" id="eventActual_522089">0.66%</td>
-				      <td class="fore  event-522089-forecast " id="eventForecast_522089">0.50%</td>
-				      <td class="prev blackFont  event-522089-previous" id="eventPrevious_522089"><span title="">0.52%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="소비자물가지수" data-event-id="1197" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522095" class="js-event-item" event_attr_id="361" data-event-datetime="2025/05/09 08:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는  6시간 34분  전에 발표되었습니다.">08:30</td>
-				      <td class="left flagCur noWrap"><span title="일본" class="ceFlags Japan" data-img_key="Japan">&nbsp;</span> JPY</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 가계지출를 클릭하세요"><a href="/economic-calendar/household-spending-361" target="_blank">
-				      가계지출 (YoY)  (3월)</a>
-				      </td>
-				      <td class="bold act greenFont event-522095-actual" title="예상치보다 높습니다" id="eventActual_522095">2.1%</td>
-				      <td class="fore  event-522095-forecast " id="eventForecast_522095">0.2%</td>
-				      <td class="prev blackFont  event-522095-previous" id="eventPrevious_522095"><span title="">-0.5%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="가계지출" data-event-id="361" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522096" class="js-event-item" event_attr_id="1191" data-event-datetime="2025/05/09 08:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는  6시간 34분  전에 발표되었습니다.">08:30</td>
-				      <td class="left flagCur noWrap"><span title="일본" class="ceFlags Japan" data-img_key="Japan">&nbsp;</span> JPY</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 가계지출를 클릭하세요"><a href="/economic-calendar/household-spending-1191" target="_blank">
-				      가계지출 (MoM)  (3월)</a>
-				      </td>
-				      <td class="bold act greenFont event-522096-actual" title="예상치보다 높습니다" id="eventActual_522096">0.4%</td>
-				      <td class="fore  event-522096-forecast " id="eventForecast_522096">-0.5%</td>
-				      <td class="prev blackFont  event-522096-previous" id="eventPrevious_522096"><span title="">3.5%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="가계지출" data-event-id="1191" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522093" class="js-event-item revised" event_attr_id="1911" data-event-datetime="2025/05/09 08:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는  6시간 34분  전에 발표되었습니다.">08:30</td>
-				      <td class="left flagCur noWrap"><span title="일본" class="ceFlags Japan" data-img_key="Japan">&nbsp;</span> JPY</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 근로자 총 임금소득를 클릭하세요"><a href="/economic-calendar/overall-wage-income-of-employees-1911" target="_blank">
-				      근로자 총 임금소득  (3월)</a>
-				      </td>
-				      <td class="bold act redFont event-522093-actual" title="예상치보다 낮습니다" id="eventActual_522093">2.1%</td>
-				      <td class="fore  event-522093-forecast " id="eventForecast_522093">2.4%</td>
-				      <td class="prev redFont  event-522093-previous" id="eventPrevious_522093"><span title="에서 개정됨 3.1%">2.7%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="근로자 총 임금소득" data-event-id="1911" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522094" class="js-event-item revised" event_attr_id="1499" data-event-datetime="2025/05/09 08:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는  6시간 34분  전에 발표되었습니다.">08:30</td>
-				      <td class="left flagCur noWrap"><span title="일본" class="ceFlags Japan" data-img_key="Japan">&nbsp;</span> JPY</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 초과 근무 수당를 클릭하세요"><a href="/economic-calendar/overtime-pay-1499" target="_blank">
-				      초과 근무 수당 (YoY)  (3월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522094-actual" title="" id="eventActual_522094">-1.10%</td>
-				      <td class="fore  event-522094-forecast " id="eventForecast_522094">&nbsp;</td>
-				      <td class="prev greenFont  event-522094-previous" id="eventPrevious_522094"><span title="에서 개정됨 2.20%">2.40%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="초과 근무 수당" data-event-id="1499" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522971" class="js-event-item" event_attr_id="1004" data-event-datetime="2025/05/09 08:50:00">
-				      <td class="first left time js-time" title="이벤트 자료는  6시간 14분  전에 발표되었습니다.">08:50</td>
-				      <td class="left flagCur noWrap"><span title="일본" class="ceFlags Japan" data-img_key="Japan">&nbsp;</span> JPY</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 외환보유고 (미국달러)를 클릭하세요"><a href="/economic-calendar/foreign-reserves-(usd)-1004" target="_blank">
-				      외환보유고 (미국달러)  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522971-actual" title="" id="eventActual_522971">1,298.2B</td>
-				      <td class="fore  event-522971-forecast " id="eventForecast_522971">&nbsp;</td>
-				      <td class="prev blackFont  event-522971-previous" id="eventPrevious_522971"><span title="">1,272.5B</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="외환보유고 (미국달러)" data-event-id="1004" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522097" class="js-event-item" event_attr_id="2226" data-event-datetime="2025/05/09 12:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  3시간 04분  전에 발표되었습니다.">12:00</td>
-				      <td class="left flagCur noWrap"><span title="중국" class="ceFlags China" data-img_key="China">&nbsp;</span> CNY</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 수출액를 클릭하세요"><a href="/economic-calendar/china-exports-(yuan-denominated)-2226" target="_blank">
-				      수출액  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522097-actual" title="" id="eventActual_522097">9.30M</td>
-				      <td class="fore  event-522097-forecast " id="eventForecast_522097">&nbsp;</td>
-				      <td class="prev blackFont  event-522097-previous" id="eventPrevious_522097"><span title="">13.50M</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="수출액" data-event-id="2226" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522098" class="js-event-item" event_attr_id="2227" data-event-datetime="2025/05/09 12:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  3시간 04분  전에 발표되었습니다.">12:00</td>
-				      <td class="left flagCur noWrap"><span title="중국" class="ceFlags China" data-img_key="China">&nbsp;</span> CNY</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 수입액를 클릭하세요"><a href="/economic-calendar/china-imports-(yuan-denominated)-2227" target="_blank">
-				      수입액  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522098-actual" title="" id="eventActual_522098">0.80M</td>
-				      <td class="fore  event-522098-forecast " id="eventForecast_522098">&nbsp;</td>
-				      <td class="prev blackFont  event-522098-previous" id="eventPrevious_522098"><span title="">-3.50M</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="수입액" data-event-id="2227" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522099" class="js-event-item" event_attr_id="2228" data-event-datetime="2025/05/09 12:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  3시간 04분  전에 발표되었습니다.">12:00</td>
-				      <td class="left flagCur noWrap"><span title="중국" class="ceFlags China" data-img_key="China">&nbsp;</span> CNY</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 무역수지를 클릭하세요"><a href="/economic-calendar/china-trade-balance-(yuan-denominated)-2228" target="_blank">
-				      무역수지  (4월)</a>
-				      </td>
-				      <td class="bold act redFont event-522099-actual" title="예상치보다 낮습니다" id="eventActual_522099">689.99B</td>
-				      <td class="fore  event-522099-forecast " id="eventForecast_522099">701.00B</td>
-				      <td class="prev blackFont  event-522099-previous" id="eventPrevious_522099"><span title="">736.72B</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="무역수지" data-event-id="2228" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522914" class="js-event-item" event_attr_id="595" data-event-datetime="2025/05/09 12:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  3시간 04분  전에 발표되었습니다.">12:00</td>
-				      <td class="left flagCur noWrap"><span title="중국" class="ceFlags China" data-img_key="China">&nbsp;</span> CNY</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 중국 수출액를 클릭하세요"><a href="/economic-calendar/chinese-exports-595" target="_blank">
-				      중국 수출액 (YoY)  (4월)</a>
-				      </td>
-				      <td class="bold act greenFont event-522914-actual" title="예상치보다 높습니다" id="eventActual_522914">8.1%</td>
-				      <td class="fore  event-522914-forecast " id="eventForecast_522914">1.9%</td>
-				      <td class="prev blackFont  event-522914-previous" id="eventPrevious_522914"><span title="">12.4%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="중국 수출액" data-event-id="595" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522915" class="js-event-item" event_attr_id="867" data-event-datetime="2025/05/09 12:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  3시간 04분  전에 발표되었습니다.">12:00</td>
-				      <td class="left flagCur noWrap"><span title="중국" class="ceFlags China" data-img_key="China">&nbsp;</span> CNY</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 중국 수입액를 클릭하세요"><a href="/economic-calendar/chinese-imports-867" target="_blank">
-				      중국 수입액 (YoY)  (4월)</a>
-				      </td>
-				      <td class="bold act greenFont event-522915-actual" title="예상치보다 높습니다" id="eventActual_522915">-0.2%</td>
-				      <td class="fore  event-522915-forecast " id="eventForecast_522915">-5.9%</td>
-				      <td class="prev blackFont  event-522915-previous" id="eventPrevious_522915"><span title="">-4.3%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="중국 수입액" data-event-id="867" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522913" class="js-event-item" event_attr_id="466" data-event-datetime="2025/05/09 12:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  3시간 04분  전에 발표되었습니다.">12:00</td>
-				      <td class="left flagCur noWrap"><span title="중국" class="ceFlags China" data-img_key="China">&nbsp;</span> CNY</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 중국 무역수지(USD)를 클릭하세요"><a href="/economic-calendar/chinese-trade-balance-466" target="_blank">
-				      중국 무역수지(USD)  (4월)</a>
-				      </td>
-				      <td class="bold act redFont event-522913-actual" title="예상치보다 낮습니다" id="eventActual_522913">96.18B</td>
-				      <td class="fore  event-522913-forecast " id="eventForecast_522913">97.00B</td>
-				      <td class="prev blackFont  event-522913-previous" id="eventPrevious_522913"><span title="">102.64B</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="중국 무역수지(USD)" data-event-id="466" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522102" class="js-event-item" event_attr_id="1090" data-event-datetime="2025/05/09 12:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  3시간 04분  전에 발표되었습니다.">12:00</td>
-				      <td class="left flagCur noWrap"><span title="인도네시아" class="ceFlags Indonesia" data-img_key="Indonesia">&nbsp;</span> IDR</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 인도네시아 소비자 신뢰지수를 클릭하세요"><a href="/economic-calendar/indonesia-consumer-confidence-1090" target="_blank">
-				      인도네시아 소비자 신뢰지수  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522102-actual" title="" id="eventActual_522102">121.7</td>
-				      <td class="fore  event-522102-forecast " id="eventForecast_522102">&nbsp;</td>
-				      <td class="prev blackFont  event-522102-previous" id="eventPrevious_522102"><span title="">121.1</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="인도네시아 소비자 신뢰지수" data-event-id="1090" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522916" class="js-event-item" event_attr_id="548" data-event-datetime="2025/05/09 13:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  2시간 04분  전에 발표되었습니다.">13:00</td>
-				      <td class="left flagCur noWrap"><span title="말레이시아" class="ceFlags Malaysia" data-img_key="Malaysia">&nbsp;</span> MYR</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 말레이시아 실업률를 클릭하세요"><a href="/economic-calendar/malaysian-unemployment-rate-548" target="_blank">
-				      말레이시아 실업률  (3월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522916-actual" title="" id="eventActual_522916">3.1%</td>
-				      <td class="fore  event-522916-forecast " id="eventForecast_522916">&nbsp;</td>
-				      <td class="prev blackFont  event-522916-previous" id="eventPrevious_522916"><span title="">3.1%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="말레이시아 실업률" data-event-id="548" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522107" class="js-event-item" event_attr_id="1441" data-event-datetime="2025/05/09 14:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  1시간 04분  전에 발표되었습니다.">14:00</td>
-				      <td class="left flagCur noWrap"><span title="일본" class="ceFlags Japan" data-img_key="Japan">&nbsp;</span> JPY</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 동행지표를 클릭하세요"><a href="/economic-calendar/coincident-indicator-1441" target="_blank">
-				      동행지표 (MoM)  (3월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522107-actual" title="" id="eventActual_522107">-1.3%</td>
-				      <td class="fore  event-522107-forecast " id="eventForecast_522107">&nbsp;</td>
-				      <td class="prev blackFont  event-522107-previous" id="eventPrevious_522107"><span title="">0.9%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="동행지표" data-event-id="1441" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522917" class="js-event-item" event_attr_id="191" data-event-datetime="2025/05/09 14:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  1시간 04분  전에 발표되었습니다.">14:00</td>
-				      <td class="left flagCur noWrap"><span title="일본" class="ceFlags Japan" data-img_key="Japan">&nbsp;</span> JPY</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 선행지수를 클릭하세요"><a href="/economic-calendar/leading-index-191" target="_blank">
-				      선행지수  (3월)</a>
-				      &nbsp;<span class="smallGrayP" title="예비 출시" data-img_key="perliminary"></span></td>
-				      <td class="bold act greenFont event-522917-actual" title="예상치보다 높습니다" id="eventActual_522917">107.7</td>
-				      <td class="fore  event-522917-forecast " id="eventForecast_522917">107.4</td>
-				      <td class="prev blackFont  event-522917-previous" id="eventPrevious_522917"><span title="">107.9</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="선행지수" data-event-id="191" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522105" class="js-event-item" event_attr_id="1582" data-event-datetime="2025/05/09 14:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는  1시간 04분  전에 발표되었습니다.">14:00</td>
-				      <td class="left flagCur noWrap"><span title="일본" class="ceFlags Japan" data-img_key="Japan">&nbsp;</span> JPY</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 선행지수를 클릭하세요"><a href="/economic-calendar/leading-index-1582" target="_blank">
-				      선행지수 (MoM)  (3월)</a>
-				      &nbsp;<span class="smallGrayP" title="예비 출시" data-img_key="perliminary"></span></td>
-				      <td class="bold act blackFont event-522105-actual" title="" id="eventActual_522105">-0.5%</td>
-				      <td class="fore  event-522105-forecast " id="eventForecast_522105">&nbsp;</td>
-				      <td class="prev blackFont  event-522105-previous" id="eventPrevious_522105"><span title="">-0.3%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="선행지수" data-event-id="1582" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522887" class="js-event-item timeSeparator" event_attr_id="1930" data-event-datetime="2025/05/09 15:45:00">
-				      <td class="first left time js-time" title="이벤트 데이터가 15:45에 발표됩니다">40 분</td>
-				      <td class="left flagCur noWrap"><span title="프랑스" class="ceFlags France" data-img_key="France">&nbsp;</span> EUR</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 프랑스 총 외환보유자산를 클릭하세요"><a href="/economic-calendar/french-reserve-assets-total-1930" target="_blank">
-				      프랑스 총 외환보유자산  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522887-actual" title="" id="eventActual_522887">&nbsp;</td>
-				      <td class="fore  event-522887-forecast " id="eventForecast_522887">&nbsp;</td>
-				      <td class="prev blackFont  event-522887-previous" id="eventPrevious_522887"><span title="">305,124.0M</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="프랑스 총 외환보유자산" data-event-id="1930" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522133" class="js-event-item" event_attr_id="362" data-event-datetime="2025/05/09 16:00:00">
-				      <td class="first left time js-time" title="이벤트 데이터가 16:00에 발표됩니다">55 분</td>
-				      <td class="left flagCur noWrap"><span title="스위스" class="ceFlags Switzerland" data-img_key="Switzerland">&nbsp;</span> CHF</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 SECO 소비자동향를 클릭하세요"><a href="/economic-calendar/seco-consumer-climate-362" target="_blank">
-				      SECO 소비자동향  (2분기)</a>
-				      </td>
-				      <td class="bold act blackFont event-522133-actual" title="" id="eventActual_522133">&nbsp;</td>
-				      <td class="fore  event-522133-forecast " id="eventForecast_522133">-34</td>
-				      <td class="prev blackFont  event-522133-previous" id="eventPrevious_522133"><span title="">-21</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="SECO 소비자동향" data-event-id="362" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523210" class="js-event-item" event_attr_id="1399" data-event-datetime="2025/05/09 16:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 1시간 25분">16:30</td>
-				      <td class="left flagCur noWrap"><span title="태국" class="ceFlags Thailand" data-img_key="Thailand">&nbsp;</span> THB</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 통화스왑 (달러)를 클릭하세요"><a href="/economic-calendar/thai-currency-swaps-(usd)-1399" target="_blank">
-				      통화스왑 (달러) </a>
-				      </td>
-				      <td class="bold act blackFont event-523210-actual" title="" id="eventActual_523210">&nbsp;</td>
-				      <td class="fore  event-523210-forecast " id="eventForecast_523210">&nbsp;</td>
-				      <td class="prev blackFont  event-523210-previous" id="eventPrevious_523210"><span title="">23.9B</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="통화스왑 (달러)" data-event-id="1399" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522929" class="js-event-item" event_attr_id="1326" data-event-datetime="2025/05/09 16:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 1시간 25분">16:30</td>
-				      <td class="left flagCur noWrap"><span title="태국" class="ceFlags Thailand" data-img_key="Thailand">&nbsp;</span> THB</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 외환보유고 (미국달러)를 클릭하세요"><a href="/economic-calendar/thai-forex-reserves-(usd)-1326" target="_blank">
-				      외환보유고 (미국달러) </a>
-				      </td>
-				      <td class="bold act blackFont event-522929-actual" title="" id="eventActual_522929">&nbsp;</td>
-				      <td class="fore  event-522929-forecast " id="eventForecast_522929">&nbsp;</td>
-				      <td class="prev blackFont  event-522929-previous" id="eventPrevious_522929"><span title="">255.8B</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="외환보유고 (미국달러)" data-event-id="1326" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522149" class="js-event-item" event_attr_id="180" data-event-datetime="2025/05/09 17:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는 1시간 55분">17:00</td>
-				      <td class="left flagCur noWrap"><span title="이탈리아" class="ceFlags Italy" data-img_key="Italy">&nbsp;</span> EUR</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 이탈리아 산업생산를 클릭하세요"><a href="/economic-calendar/italian-industrial-production-180" target="_blank">
-				      이탈리아 산업생산 (MoM)  (3월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522149-actual" title="" id="eventActual_522149">&nbsp;</td>
-				      <td class="fore  event-522149-forecast " id="eventForecast_522149">0.4%</td>
-				      <td class="prev blackFont  event-522149-previous" id="eventPrevious_522149"><span title="">-0.9%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="이탈리아 산업생산" data-event-id="180" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522148" class="js-event-item" event_attr_id="951" data-event-datetime="2025/05/09 17:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는 1시간 55분">17:00</td>
-				      <td class="left flagCur noWrap"><span title="이탈리아" class="ceFlags Italy" data-img_key="Italy">&nbsp;</span> EUR</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 이탈리아 산업생산를 클릭하세요"><a href="/economic-calendar/italian-industrial-production-951" target="_blank">
-				      이탈리아 산업생산 (YoY)  (3월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522148-actual" title="" id="eventActual_522148">&nbsp;</td>
-				      <td class="fore  event-522148-forecast " id="eventForecast_522148">&nbsp;</td>
-				      <td class="prev blackFont  event-522148-previous" id="eventPrevious_522148"><span title="">-2.7%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="이탈리아 산업생산" data-event-id="951" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523023" class="js-event-item" event_attr_id="1975" data-event-datetime="2025/05/09 17:40:00">
-				      <td class="first left time js-time" title="이벤트 자료는 2시간 35분">17:40</td>
-				      <td class="left flagCur noWrap"><span title="영국" class="ceFlags United_Kingdom" data-img_key="United_Kingdom">&nbsp;</span> GBP</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 베일리 영란은행 총재의 연설를 클릭하세요"><a href="/economic-calendar/boe-gov-bailey-speaks-1975" target="_blank">
-				      베일리 영란은행 총재의 연설 </a>
-				      		                  &nbsp;<span class="audioIconNew" title="연설" data-img_key="speach"></span></td>
-				      <td class="bold act blackFont event-523023-actual" title="" id="eventActual_523023">&nbsp;</td>
-				      <td class="fore  event-523023-forecast " id="eventForecast_523023">&nbsp;</td>
-				      <td class="prev blackFont  event-523023-previous" id="eventPrevious_523023"><span title="">&nbsp;</span></td>
-				      				      <td class="" data-name="베일리 영란은행 총재의 연설" data-event-id="1975" data-status-enabled="0">
-					      					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522930" class="js-event-item" event_attr_id="697" data-event-datetime="2025/05/09 18:10:00">
-				      <td class="first left time js-time" title="이벤트 자료는 3시간 05분">18:10</td>
-				      <td class="left flagCur noWrap"><span title="이탈리아" class="ceFlags Italy" data-img_key="Italy">&nbsp;</span> EUR</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 이탈리아 1년물 BOT 국채 입찰를 클릭하세요"><a href="/economic-calendar/italian-12-month-bot-auction-697" target="_blank">
-				      이탈리아 1년물 BOT 국채 입찰 </a>
-				      </td>
-				      <td class="bold act blackFont event-522930-actual" title="" id="eventActual_522930">&nbsp;</td>
-				      <td class="fore  event-522930-forecast " id="eventForecast_522930">&nbsp;</td>
-				      <td class="prev blackFont  event-522930-previous" id="eventPrevious_522930"><span title="">2.120%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="이탈리아 1년물 BOT 국채 입찰" data-event-id="697" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523086" class="js-event-item" event_attr_id="2108" data-event-datetime="2025/05/09 18:55:00">
-				      <td class="first left time js-time" title="이벤트 자료는 3시간 50분">18:55</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 연준 금융감독 부의장 바가 연설합니다를 클릭하세요"><a href="/economic-calendar/fed-vice-chair-for-supervision-barr-speaks-2108" target="_blank">
-				      연준 금융감독 부의장 바가 연설합니다 </a>
-				      		                  &nbsp;<span class="audioIconNew" title="연설" data-img_key="speach"></span></td>
-				      <td class="bold act blackFont event-523086-actual" title="" id="eventActual_523086">&nbsp;</td>
-				      <td class="fore  event-523086-forecast " id="eventForecast_523086">&nbsp;</td>
-				      <td class="prev blackFont  event-523086-previous" id="eventPrevious_523086"><span title="">&nbsp;</span></td>
-				      				      <td class="" data-name="연준 금융감독 부의장 바가 연설합니다" data-event-id="2108" data-status-enabled="0">
-					      					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523026" class="js-event-item" event_attr_id="1585" data-event-datetime="2025/05/09 19:15:00">
-				      <td class="first left time js-time" title="이벤트 자료는 4시간 10분">19:15</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 FOMC 멤버 Williams가 연설를 클릭하세요"><a href="/economic-calendar/fomc-member-williams-speaks-1585" target="_blank">
-				      FOMC 멤버 Williams가 연설 </a>
-				      		                  &nbsp;<span class="audioIconNew" title="연설" data-img_key="speach"></span></td>
-				      <td class="bold act blackFont event-523026-actual" title="" id="eventActual_523026">&nbsp;</td>
-				      <td class="fore  event-523026-forecast " id="eventForecast_523026">&nbsp;</td>
-				      <td class="prev blackFont  event-523026-previous" id="eventPrevious_523026"><span title="">&nbsp;</span></td>
-				      				      <td class="" data-name="FOMC 멤버 Williams가 연설" data-event-id="1585" data-status-enabled="0">
-					      					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523466" class="js-event-item" event_attr_id="2261" data-event-datetime="2025/05/09 19:45:00">
-				      <td class="first left time js-time" title="이벤트 자료는 4시간 40분">19:45</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 아드리아나 쿠글러 FOMC 위원의 연설를 클릭하세요"><a href="/economic-calendar/fomc-member-kugler-speaks-2261" target="_blank">
-				      아드리아나 쿠글러 FOMC 위원의 연설 </a>
-				      		                  &nbsp;<span class="audioIconNew" title="연설" data-img_key="speach"></span></td>
-				      <td class="bold act blackFont event-523466-actual" title="" id="eventActual_523466">&nbsp;</td>
-				      <td class="fore  event-523466-forecast " id="eventForecast_523466">&nbsp;</td>
-				      <td class="prev blackFont  event-523466-previous" id="eventPrevious_523466"><span title="">&nbsp;</span></td>
-				      				      <td class="" data-name="아드리아나 쿠글러 FOMC 위원의 연설" data-event-id="2261" data-status-enabled="0">
-					      					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523027" class="js-event-item" event_attr_id="2011" data-event-datetime="2025/05/09 20:15:00">
-				      <td class="first left time js-time" title="이벤트 자료는 5시간 10분">20:15</td>
-				      <td class="left flagCur noWrap"><span title="영국" class="ceFlags United_Kingdom" data-img_key="United_Kingdom">&nbsp;</span> GBP</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 BoE의 MPC 위원 Pill의 연설를 클릭하세요"><a href="/economic-calendar/boe-mpc-member-pill-speech-2011" target="_blank">
-				      BoE의 MPC 위원 Pill의 연설 </a>
-				      		                  &nbsp;<span class="audioIconNew" title="연설" data-img_key="speach"></span></td>
-				      <td class="bold act blackFont event-523027-actual" title="" id="eventActual_523027">&nbsp;</td>
-				      <td class="fore  event-523027-forecast " id="eventForecast_523027">&nbsp;</td>
-				      <td class="prev blackFont  event-523027-previous" id="eventPrevious_523027"><span title="">&nbsp;</span></td>
-				      				      <td class="" data-name="BoE의 MPC 위원 Pill의 연설" data-event-id="2011" data-status-enabled="0">
-					      					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522931" class="js-event-item" event_attr_id="758" data-event-datetime="2025/05/09 20:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 5시간 25분">20:30</td>
-				      <td class="left flagCur noWrap"><span title="인도" class="ceFlags India" data-img_key="India">&nbsp;</span> INR</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 인도 은행대출증가량를 클릭하세요"><a href="/economic-calendar/indian-bank-loan-growth-758" target="_blank">
-				      인도 은행대출증가량 </a>
-				      </td>
-				      <td class="bold act blackFont event-522931-actual" title="" id="eventActual_522931">&nbsp;</td>
-				      <td class="fore  event-522931-forecast " id="eventForecast_522931">&nbsp;</td>
-				      <td class="prev blackFont  event-522931-previous" id="eventPrevious_522931"><span title="">11.0%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="인도 은행대출증가량" data-event-id="758" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522932" class="js-event-item" event_attr_id="1421" data-event-datetime="2025/05/09 20:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 5시간 25분">20:30</td>
-				      <td class="left flagCur noWrap"><span title="인도" class="ceFlags India" data-img_key="India">&nbsp;</span> INR</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 예금 성장를 클릭하세요"><a href="/economic-calendar/indian-deposit-growth-1421" target="_blank">
-				      예금 성장 </a>
-				      </td>
-				      <td class="bold act blackFont event-522932-actual" title="" id="eventActual_522932">&nbsp;</td>
-				      <td class="fore  event-522932-forecast " id="eventForecast_522932">&nbsp;</td>
-				      <td class="prev blackFont  event-522932-previous" id="eventPrevious_522932"><span title="">10.1%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="예금 성장" data-event-id="1421" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522933" class="js-event-item" event_attr_id="757" data-event-datetime="2025/05/09 20:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 5시간 25분">20:30</td>
-				      <td class="left flagCur noWrap"><span title="인도" class="ceFlags India" data-img_key="India">&nbsp;</span> INR</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 인도 외환보유고 (미국달러)를 클릭하세요"><a href="/economic-calendar/indian-fx-reserves,-usd-757" target="_blank">
-				      인도 외환보유고 (미국달러) </a>
-				      </td>
-				      <td class="bold act blackFont event-522933-actual" title="" id="eventActual_522933">&nbsp;</td>
-				      <td class="fore  event-522933-forecast " id="eventForecast_522933">&nbsp;</td>
-				      <td class="prev blackFont  event-522933-previous" id="eventPrevious_522933"><span title="">688.13B</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="인도 외환보유고 (미국달러)" data-event-id="757" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522936" class="js-event-item" event_attr_id="1797" data-event-datetime="2025/05/09 21:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는 5시간 55분">21:00</td>
-				      <td class="left flagCur noWrap"><span title="영국" class="ceFlags United_Kingdom" data-img_key="United_Kingdom">&nbsp;</span> GBP</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 NIESER 월별 GDP 추적를 클릭하세요"><a href="/economic-calendar/niesr-monthly-gdp-tracker-1797" target="_blank">
-				      NIESER 월별 GDP 추적  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522936-actual" title="" id="eventActual_522936">&nbsp;</td>
-				      <td class="fore  event-522936-forecast " id="eventForecast_522936">&nbsp;</td>
-				      <td class="prev blackFont  event-522936-previous" id="eventPrevious_522936"><span title="">0.6%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="NIESER 월별 GDP 추적" data-event-id="1797" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522158" class="js-event-item" event_attr_id="1165" data-event-datetime="2025/05/09 21:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는 5시간 55분">21:00</td>
-				      <td class="left flagCur noWrap"><span title="브라질" class="ceFlags Brazil" data-img_key="Brazil">&nbsp;</span> BRL</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 브라질 소비자물가지수를 클릭하세요"><a href="/economic-calendar/brazilian-cpi-1165" target="_blank">
-				      브라질 소비자물가지수 (MoM)  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522158-actual" title="" id="eventActual_522158">&nbsp;</td>
-				      <td class="fore  event-522158-forecast " id="eventForecast_522158">&nbsp;</td>
-				      <td class="prev blackFont  event-522158-previous" id="eventPrevious_522158"><span title="">0.56%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="브라질 소비자물가지수" data-event-id="1165" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522159" class="js-event-item" event_attr_id="410" data-event-datetime="2025/05/09 21:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는 5시간 55분">21:00</td>
-				      <td class="left flagCur noWrap"><span title="브라질" class="ceFlags Brazil" data-img_key="Brazil">&nbsp;</span> BRL</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 브라질 소비자물가지수를 클릭하세요"><a href="/economic-calendar/brazilian-cpi-410" target="_blank">
-				      브라질 소비자물가지수 (YoY)  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522159-actual" title="" id="eventActual_522159">&nbsp;</td>
-				      <td class="fore  event-522159-forecast " id="eventForecast_522159">&nbsp;</td>
-				      <td class="prev blackFont  event-522159-previous" id="eventPrevious_522159"><span title="">5.48%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="브라질 소비자물가지수" data-event-id="410" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_521722" class="js-event-item" event_attr_id="1883" data-event-datetime="2025/05/09 21:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는 5시간 55분">21:00</td>
-				      <td class="left flagCur noWrap"><span title="브라질" class="ceFlags Brazil" data-img_key="Brazil">&nbsp;</span> BRL</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 브라질 소비자물가지수(계절 조정)를 클릭하세요"><a href="/economic-calendar/brazilian-ipca-inflation-index-sa-1883" target="_blank">
-				      브라질 소비자물가지수(계절 조정) (MoM)  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-521722-actual" title="" id="eventActual_521722">&nbsp;</td>
-				      <td class="fore  event-521722-forecast " id="eventForecast_521722">&nbsp;</td>
-				      <td class="prev blackFont  event-521722-previous" id="eventPrevious_521722"><span title="">0.51%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="브라질 소비자물가지수(계절 조정)" data-event-id="1883" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523467" class="js-event-item" event_attr_id="1775" data-event-datetime="2025/05/09 21:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 6시간 25분">21:30</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 FOMC 위원 Barkin 연설를 클릭하세요"><a href="/economic-calendar/fomc-member-barkin-speaks-1775" target="_blank">
-				      FOMC 위원 Barkin 연설 </a>
-				      		                  &nbsp;<span class="audioIconNew" title="연설" data-img_key="speach"></span></td>
-				      <td class="bold act blackFont event-523467-actual" title="" id="eventActual_523467">&nbsp;</td>
-				      <td class="fore  event-523467-forecast " id="eventForecast_523467">&nbsp;</td>
-				      <td class="prev blackFont  event-523467-previous" id="eventPrevious_523467"><span title="">&nbsp;</span></td>
-				      				      <td class="" data-name="FOMC 위원 Barkin 연설" data-event-id="1775" data-status-enabled="0">
-					      					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523028" class="js-event-item" event_attr_id="1585" data-event-datetime="2025/05/09 21:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 6시간 25분">21:30</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 FOMC 멤버 Williams가 연설를 클릭하세요"><a href="/economic-calendar/fomc-member-williams-speaks-1585" target="_blank">
-				      FOMC 멤버 Williams가 연설 </a>
-				      		                  &nbsp;<span class="audioIconNew" title="연설" data-img_key="speach"></span></td>
-				      <td class="bold act blackFont event-523028-actual" title="" id="eventActual_523028">&nbsp;</td>
-				      <td class="fore  event-523028-forecast " id="eventForecast_523028">&nbsp;</td>
-				      <td class="prev blackFont  event-523028-previous" id="eventPrevious_523028"><span title="">&nbsp;</span></td>
-				      				      <td class="" data-name="FOMC 멤버 Williams가 연설" data-event-id="1585" data-status-enabled="0">
-					      					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522160" class="js-event-item" event_attr_id="2218" data-event-datetime="2025/05/09 21:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 6시간 25분">21:30</td>
-				      <td class="left flagCur noWrap"><span title="캐나다" class="ceFlags Canada" data-img_key="Canada">&nbsp;</span> CAD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 시간당 평균 임금 정규직를 클릭하세요"><a href="/economic-calendar/avg-hourly-wages-permanent-employee-2218" target="_blank">
-				      시간당 평균 임금 정규직  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522160-actual" title="" id="eventActual_522160">&nbsp;</td>
-				      <td class="fore  event-522160-forecast " id="eventForecast_522160">&nbsp;</td>
-				      <td class="prev blackFont  event-522160-previous" id="eventPrevious_522160"><span title="">3.5%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="시간당 평균 임금 정규직" data-event-id="2218" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522167" class="js-event-item" event_attr_id="95" data-event-datetime="2025/05/09 21:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 6시간 25분">21:30</td>
-				      <td class="left flagCur noWrap"><span title="캐나다" class="ceFlags Canada" data-img_key="Canada">&nbsp;</span> CAD</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 고용변동를 클릭하세요"><a href="/economic-calendar/employment-change-95" target="_blank">
-				      고용변동  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522167-actual" title="" id="eventActual_522167">&nbsp;</td>
-				      <td class="fore  event-522167-forecast " id="eventForecast_522167">4.1K</td>
-				      <td class="prev blackFont  event-522167-previous" id="eventPrevious_522167"><span title="">-32.6K</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="고용변동" data-event-id="95" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522164" class="js-event-item" event_attr_id="1021" data-event-datetime="2025/05/09 21:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 6시간 25분">21:30</td>
-				      <td class="left flagCur noWrap"><span title="캐나다" class="ceFlags Canada" data-img_key="Canada">&nbsp;</span> CAD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 전일제고용 변동를 클릭하세요"><a href="/economic-calendar/full-employment-change-1021" target="_blank">
-				      전일제고용 변동  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522164-actual" title="" id="eventActual_522164">&nbsp;</td>
-				      <td class="fore  event-522164-forecast " id="eventForecast_522164">&nbsp;</td>
-				      <td class="prev blackFont  event-522164-previous" id="eventPrevious_522164"><span title="">-62.0K</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="전일제고용 변동" data-event-id="1021" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522161" class="js-event-item" event_attr_id="1022" data-event-datetime="2025/05/09 21:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 6시간 25분">21:30</td>
-				      <td class="left flagCur noWrap"><span title="캐나다" class="ceFlags Canada" data-img_key="Canada">&nbsp;</span> CAD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 시간제고용 변동를 클릭하세요"><a href="/economic-calendar/part-time-employment-change-1022" target="_blank">
-				      시간제고용 변동  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522161-actual" title="" id="eventActual_522161">&nbsp;</td>
-				      <td class="fore  event-522161-forecast " id="eventForecast_522161">&nbsp;</td>
-				      <td class="prev blackFont  event-522161-previous" id="eventPrevious_522161"><span title="">29.5K</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="시간제고용 변동" data-event-id="1022" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522162" class="js-event-item" event_attr_id="670" data-event-datetime="2025/05/09 21:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 6시간 25분">21:30</td>
-				      <td class="left flagCur noWrap"><span title="캐나다" class="ceFlags Canada" data-img_key="Canada">&nbsp;</span> CAD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 생산활동참여지수를 클릭하세요"><a href="/economic-calendar/participation-rate-670" target="_blank">
-				      생산활동참여지수  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522162-actual" title="" id="eventActual_522162">&nbsp;</td>
-				      <td class="fore  event-522162-forecast " id="eventForecast_522162">&nbsp;</td>
-				      <td class="prev blackFont  event-522162-previous" id="eventPrevious_522162"><span title="">65.2%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="생산활동참여지수" data-event-id="670" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_522163" class="js-event-item" event_attr_id="301" data-event-datetime="2025/05/09 21:30:00">
-				      <td class="first left time js-time" title="이벤트 자료는 6시간 25분">21:30</td>
-				      <td class="left flagCur noWrap"><span title="캐나다" class="ceFlags Canada" data-img_key="Canada">&nbsp;</span> CAD</td>
-				      <td class="left textNum sentiment noWrap" title="보통 정도의 변동성이 예상됨" data-img_key="bull2"><i class="grayFullBullishIcon"></i><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 실업률를 클릭하세요"><a href="/economic-calendar/unemployment-rate-301" target="_blank">
-				      실업률  (4월)</a>
-				      </td>
-				      <td class="bold act blackFont event-522163-actual" title="" id="eventActual_522163">&nbsp;</td>
-				      <td class="fore  event-522163-forecast " id="eventForecast_522163">6.8%</td>
-				      <td class="prev blackFont  event-522163-previous" id="eventPrevious_522163"><span title="">6.7%</span></td>
-				      				      <td class="alert js-injected-user-alert-container " data-name="실업률" data-event-id="301" data-status-enabled="0">
-					      						  <span class="js-plus-icon alertBellGrayPlus genToolTip oneliner" data-tooltip="알림 생성하기" data-tooltip-alt="알림이 활성화됨" data-reg_ep="add alert"></span>
-						  					  </td>
-				    </tr>
-						    		<tr id="eventRowId_523087" class="js-event-item" event_attr_id="2211" data-event-datetime="2025/05/09 23:00:00">
-				      <td class="first left time js-time" title="이벤트 자료는 7시간 55분">23:00</td>
-				      <td class="left flagCur noWrap"><span title="미국" class="ceFlags United_States" data-img_key="United_States">&nbsp;</span> USD</td>
-				      <td class="left textNum sentiment noWrap" title="낮은 변동성이 예상됨" data-img_key="bull1"><i class="grayFullBullishIcon"></i><i class="grayEmptyBullishIcon"></i><i class="grayEmptyBullishIcon"></i></td>
-				      <td class="left event" title="정보를 더 보려면 Fed Goolsbee Speaks를 클릭하세요"><a href="/economic-calendar/fed-goolsbee-speaks-2211" target="_blank">
-				      Fed Goolsbee Speaks </a>
-				      		                  &nbsp;<span class="audioIconNew" title="연설" data-img_key="speach"></span></td>
-				      <td class="bold act blackFont event-523087-actual" title="" id="eventActual_523087">&nbsp;</td>
-				      <td class="fore  event-523087-forecast " id="eventForecast_523087">&nbsp;</td>
-				      <td class="prev blackFont  event-523087-previous" id="eventPrevious_523087"><span title="">&nbsp;</span></td>
-				      				      <td class="" data-name="Fed Goolsbee Speaks" data-event-id="2211" data-status-enabled="0">
-					      					  </td>
-				    </tr>
-				
+      <tbody>
+        <tr>
+          <td>00:30</td>
+          <td><span class="label label-usd">USD</span></td>
+          <td>4주일 국고채 입찰</td>
+          <td><span class="importance imp-medium">중간</span></td>
+          <td>4.225%</td>
+          <td>4.240%</td>
+          <td>4.240%</td>
+        </tr>
+        <tr>
+          <td>00:30</td>
+          <td><span class="label label-usd">USD</span></td>
+          <td>8주일 미 국채 입찰</td>
+          <td><span class="importance imp-medium">중간</span></td>
+          <td>4.225%</td>
+          <td>4.220%</td>
+          <td>4.220%</td>
+        </tr>
+        <tr>
+          <td>05:30</td>
+          <td><span class="label label-usd">USD</span></td>
+          <td>연방준비은행 지급준비금 잔액</td>
+          <td><span class="importance imp-high">높음</span></td>
+          <td>6.711B</td>
+          <td>-</td>
+          <td>6.709B</td>
+        </tr>
+        <tr>
+          <td>08:00</td>
+          <td><span class="label label-krw">KRW</span></td>
+          <td>한국 경상수지</td>
+          <td><span class="importance imp-low">낮음</span></td>
+          <td>9.14B</td>
+          <td>-</td>
+          <td>7.18B</td>
+        </tr>
+        <tr>
+          <td>08:30</td>
+          <td><span class="label label-jpy">JPY</span></td>
+          <td>가계지출 (YoY)</td>
+          <td><span class="importance imp-medium">중간</span></td>
+          <td>2.1%</td>
+          <td>0.2%</td>
+          <td>-0.5%</td>
+        </tr>
       </tbody>
-  </table>
+    </table>
+  </div>
 </body>
 </html>
