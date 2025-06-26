@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIMIX 회원가입</title>
+  <!-- Inter 폰트 로드 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #F5F7FA;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .wrapper {
+      text-align: center;
+    }
+
+    /* 로고 */
+    .logo {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .logo .dark { color: #0E1731; }
+    .logo .green { color: #07A04A; }
+
+    /* 서브타이틀 */
+    .subtitle {
+      color: #58667E;
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+
+    /* 카드 */
+    .card {
+      background: #FFFFFF;
+      padding: 32px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      width: 360px;
+    }
+
+    .card h2 {
+      margin-bottom: 24px;
+      font-size: 24px;
+      color: #0E1731;
+    }
+
+    /* form */
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #0E1731;
+      font-size: 14px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 14px;
+      border: 1px solid #DDDDDD;
+      border-radius: 4px;
+    }
+
+    /* 비밀번호 토글 아이콘 */
+    .form-group.password {
+      position: relative;
+    }
+    .form-group.password input {
+      padding-right: 40px;
+    }
+    .form-group.password .toggle-btn {
+      position: absolute;
+      top: 50%;
+      right: 16px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    /* 체크박스 */
+    .checkbox {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #0E1731;
+    }
+    .checkbox input {
+      margin-right: 8px;
+    }
+
+    /* 버튼 */
+    .btn {
+      width: 100%;
+      padding: 12px 0;
+      background: #07A04A;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* 하단 문구 */
+    .footer {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #58667E;
+    }
+    .footer a {
+      color: #07A04A;
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- 로고 -->
+    <div class="logo">
+      <span class="dark">FI</span><span class="green">MIX</span>
+    </div>
+    <!-- 서브타이틀 -->
+    <div class="subtitle">투자자를 위한 통합 금융 정보 허브</div>
+
+    <!-- 회원가입 카드 -->
+    <div class="card">
+      <h2>회원가입</h2>
+
+      <div class="form-group">
+        <label for="user-id">아이디</label>
+        <input type="text" id="user-id" placeholder="아이디를 입력하세요">
+      </div>
+
+      <div class="form-group">
+        <label for="email">이메일</label>
+        <input type="email" id="email" placeholder="이메일을 입력하세요">
+      </div>
+
+      <div class="form-group password">
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" placeholder="비밀번호를 입력하세요">
+        <button type="button" class="toggle-btn" aria-label="Toggle visibility">
+          <!-- eye icon (Heroicons) -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="form-group password">
+        <label for="password-confirm">비밀번호 확인</label>
+        <input type="password" id="password-confirm" placeholder="비밀번호를 다시 입력하세요">
+        <button type="button" class="toggle-btn" aria-label="Toggle visibility">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="terms">
+        <label for="terms">서비스 이용약관 및 개인정보처리방침에 동의합니다</label>
+      </div>
+
+      <button class="btn">회원가입</button>
+
+      <div class="footer">
+        이미 계정이 있으신가요? <a href="#">로그인</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
